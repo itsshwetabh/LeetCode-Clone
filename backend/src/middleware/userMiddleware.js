@@ -6,7 +6,10 @@ const userMiddleware = async (req,res,next)=>{
 
     try{
       
-        const {token} = req.cookies || req.body || req.headers["Authorization"].replace("Bearer ", "");
+        const token =   req.cookies?.token ||
+      req.body?.token ||
+      req.headers?.authorization?.replace("Bearer ", "") ||
+      null;
         if(!token){
             console.log("This is token",token)
             throw new Error("Token is not persent");
