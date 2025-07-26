@@ -7,7 +7,7 @@ const Submission = require("../models/submission")
 
 
 const register = async (req,res)=>{
-    
+    console.log("In register")
     try{
         // validate the data;
 
@@ -43,6 +43,8 @@ const login = async (req,res)=>{
 
     try{
         const {emailId, password} = req.body;
+        console.log("Email",emailId)
+        console.log("Password",password)
 
         if(!emailId)
             throw new Error("Invalid Credentials");
@@ -64,10 +66,11 @@ const login = async (req,res)=>{
         }
 
         const token =  jwt.sign({_id:user._id , emailId:emailId, role:user.role},process.env.JWT_KEY,{expiresIn: 60*60});
-        res.cookie('token',token,{maxAge: 60*60*1000});
-        res.status(201).json({
+        res.cookie('token',token,{maxAge: 60*60*1000})
+        .status(201).json({
             user:reply,
-            message:"Loggin Successfully"
+            message:"Loggin Successfully",
+            token
         })
     }
     catch(err){

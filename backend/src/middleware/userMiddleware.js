@@ -5,10 +5,12 @@ const redisClient = require("../config/redis")
 const userMiddleware = async (req,res,next)=>{
 
     try{
-        
-        const {token} = req.cookies;
-        if(!token)
+      
+        const {token} = req.cookies || req.body || req.headers["authorization"].replace("Bearer ", "");
+        if(!token){
+            console.log("This is token",token)
             throw new Error("Token is not persent");
+        }
 
         const payload = jwt.verify(token,process.env.JWT_KEY);
 
