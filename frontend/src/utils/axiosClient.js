@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:3000',
+//   baseURL: 'http://localhost:3000',
+  baseURL: 'https://leetcode-clone-9u8u.onrender.com',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -9,25 +10,12 @@ const axiosClient = axios.create({
 });
 
 // Add request interceptor
-axiosClient.interceptors.request.use(
-  (config) => {
-    // Do not attach token for login or register requests
-    const excludedPaths = ['/user/login', '/user/register']; // Add other paths if needed
-
-    const shouldSkipAuth = excludedPaths.some(path => config.url?.includes(path));
-
-    if (!shouldSkipAuth) {
-      const token = localStorage.getItem("token");
-      if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
-      }
-    }
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Add token to headers
+axiosClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
-
+  return config;
+});
 export default axiosClient;
